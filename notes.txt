@@ -1,0 +1,22 @@
+
+*** 2020-11-20 ***
+
+Main URL: https://www.gunbroker.com/
+Endpoints:
+    - Pistol-Ammunition/search?
+    - Rifle-Ammunition/search?
+    - Shotgun-Shells/search?
+Navigating pages:
+    - PageSize=[6,12,24,48,96]
+    - PageIndex=1
+        - <span class="page-count-display">49</span>
+
+Records
+time, price, manufacturer, model, calibur, num_rounds, buying_format[auction|buynow], listing_details, condition, min_bid, bid_count
+
+- Considerations when extracting data
+    - switching browsers
+    - using VPN
+    - periodic vs sporadic pinging
+    - run from the cloud
+    - data storage (compression via protocol buffers?)
