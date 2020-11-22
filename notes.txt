@@ -1,15 +1,32 @@
+*** 2020-11-21 ***
 
-*** 2020-11-20 ***
+AWS and Docker:
+    https://docker-curriculum.com/#docker-on-aws
+
 
 Main URL: https://www.gunbroker.com/
 Endpoints:
-    - Pistol-Ammunition/search?
-    - Rifle-Ammunition/search?
-    - Shotgun-Shells/search?
+    - Ammunition/search
+    - Pistol-Ammunition/search
+    - Rifle-Ammunition/search
+    - Shotgun-Shells/search
+    
 Navigating pages:
     - PageSize=[6,12,24,48,96]
     - PageIndex=1
-        - <span class="page-count-display">49</span>
+
+Extract Info from HTML:
+    - Page count
+        <span class="page-count-display">49</span>
+    - Item number
+        <span class="item-number">
+            :
+            <a href="/item/884923655" target="_self">884923655</a>
+        </span>
+    - Item info:
+        dataLayer.push( {  item: {  itemID: 884923658 , highBidderID: 6030664 , sellerID: 4254172 , sellerName: "TacPlace1" , title: "7.62x39 HP 123GR Barnaul Ammunition 500rds" , adTitle: "7.62x39,HP,123GR,Barnaul,Ammunition,500rds" , categoryID: 3017 , quantity: 1 , link: "https://www.gunbroker.com/item/884923658" , endingDate: "11/21/2020 10:43:18" , startingDate: "11/20/2020 10:29:54" , isActive: false , buyNowPrice: 0.00 , fixedPrice: 0.00 , price: 210.00 , highestPrice: 210.00 , upc: "" , sku: "" , mfgPartNumber: "" , subtitle: "" , condition: "1" , weight: null , gtin: "" ,imageURL: "https://p1.gunbroker.com/pics/884923000/884923658/pix784076517.jpg" , manufacturer: "Other Manufacturer" , model: "" , caliber: "7.62x39" , gauge: "" , brand: ""  }  } );
+
+*** 2020-11-20 ***
 
 Records
 time, price, manufacturer, model, calibur, num_rounds, buying_format[auction|buynow], listing_details, condition, min_bid, bid_count
