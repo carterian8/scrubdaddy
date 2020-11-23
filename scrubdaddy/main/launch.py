@@ -42,6 +42,9 @@ def parse_cmd_line(as_dict=False):
 	# scraper subparser...
 	
 	parser_scraper = subparsers.add_parser("scraper")
+	parser_scraper.add_argument("json_config",
+		help="""Main configuration file for scraping details"""
+	)
 	parser_scraper.add_argument("--log_level", 
 		choices=["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"],
 		default=defaults["log_level"],
