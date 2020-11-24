@@ -9,11 +9,11 @@ import logging
 from datetime import datetime
 from logging import CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET # log levels
 
-DEFAULT_LOG_FORMAT = '[%(levelname)8s in %(name)s] %(message)s'
+DEFAULT_LOG_FORMAT = '[%(asctime)s %(levelname)8s] %(message)s'
 TRACEABLE_LOG_FORMAT = (
-	'[%(levelname)8s in %(name)s:%(lineno)d] %(message)s')
+	'[%(asctime)s %(levelname)8s in %(name)s:%(lineno)d] %(message)s')
 EXTRA_TRACEABLE_LOG_FORMAT = (
-	'[%(levelname)8s in %(filename)s:%(lineno)d - %(funcName)s] %(message)s')
+	'[%(asctime)s %(levelname)8s in %(filename)s:%(lineno)d - %(funcName)s] %(message)s')
 
 FORMAT_BY_LEVEL = {
 	DEBUG: TRACEABLE_LOG_FORMAT,
