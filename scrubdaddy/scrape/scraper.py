@@ -4,6 +4,7 @@
 
 import bs4
 from datetime import datetime, timezone
+import demjson
 import re
 from selenium import webdriver
 from selenium.webdriver import FirefoxOptions
@@ -41,10 +42,10 @@ def run(args):
 	# Parse the source...
 
 	soup = bs4.BeautifulSoup(driver.page_source, features="html.parser")
-	for div in soup.findAll('div', class_=re.compile("listing\\s")):
+	for div in soup.findAll('div', class_=re.compile(r"listing\s")):
 
 		# Extract the url for the item...
-		a = div.find("a", href=re.compile("/item/\\d+"))
+		a = div.find("a", href=re.compile(r"/item/\d+"))
 		logr.debug("Extracting info for {}".format(a["href"]))
 
 		# Get the HTML source for the item...
@@ -54,21 +55,56 @@ def run(args):
 			features="html.parser"
 		)
 
+		# Find specific script tag containing the info...
+
+		# product_info_regex = r"""
+		# 	.+dataLayer\.push\((\s+)?{(\s+)?item:(\s+)?{(\s+)
+		# 	itemID:(\s+)?(?P<item>\d+).+					# Item number
+		# 	fixedPrice:(\s+)?(?P<fixedPrice>[\d.]+).+		# Fixed price
+		# 	price:(\s+)?(?P<price>[\d.]+).+					# Price
+		# 	highestPrice:(\s+)?(?P<highestPrice>[\d.]+).+	# Highest price
+		# 	caliber:(\s+)?\"(?P<caliber>.+)\".+				# Caliber
+		# 	# manufacturer:(\s+)?\"(?P<manufacturer>.+)\".+	# Manufacturer
+		# """
+		product_info_regex = r"""
+			.+dataLayer\.push\((\s+)?(?P<json>{(\s+)?item:(\s+)?{(\s+).+}).+
+		"""
+		script_tag = item_soup.find(
+			"script", 
+			text=re.compile(product_info_regex, re.VERBOSE)
+		)
+		
+		err_str = "Script tag not extracted for {}".format(a["href"])
+		if script_tag:
+			script_tag_text = "".join(script_tag.contents)
+			product_info_pattern = re.compile(product_info_regex, re.VERBOSE)
+			match = product_info_pattern.search(script_tag_text)
+			err_str = "No match found for script tag text {}".format(a["href"])
+			
+		if match is None:
+			logr.error(err_str)
+			continue
+
 		# Extract product information...
 
-		timestamp = datetime.now(timezone.utc).strftime("%d-%m-%Y_%H:%M:%S%z")
-		sold = (item_soup.find("div", class_="alert sold-item") is not None)
-		item_id = None
-		price = None
-		manufacturer = None
-		model = None
-		calibur = None
-		num_rounds = None
-		buying_format = None
-		listing_details = None
-		condition = None
-		min_bid = None
-		bid_count = None
+		item_js_dict = demjson.decode(match.group("json"))
+		product_info = dict()
+		product_info["timestamp"] 		= datetime.now(timezone.utc).strftime("%Y-%m-%d_%H:%M:%S%z")
+		product_info["sold"] 			= (item_soup.find("div", class_="alert sold-item") is not None)
+		product_info["item_id"] 		= item_js_dict["item"]["itemID"]
+		product_info["price_usd"] 		= item_js_dict["item"]["price"]
+		product_info["manufacturer"] 	= item_js_dict["item"]["manufacturer"]
+		product_info["model"] 			= None
+		product_info["caliber"] 		= item_js_dict["item"]["caliber"]
+		product_info["num_rounds"] 		= None
+		product_info["buying_format"] 	= None
+		product_info["listing_details"] = None
+		product_info["condition"] 		= None
+		product_info["min_bid"] 		= None
+		product_info["bid_count"]		= None
+
+		logr.debug(product_info)
+		break
 
 		# Load into DB...
 

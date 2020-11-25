@@ -42,8 +42,12 @@ class LevelFormatter(logging.Formatter):
 
 
 def get_logger(
-		name, level=INFO, format_by_level=FORMAT_BY_LEVEL, 
-		default_log_format=DEFAULT_LOG_FORMAT):
+	name, 
+	level=INFO, 
+	format_by_level=FORMAT_BY_LEVEL, 
+	default_log_format=DEFAULT_LOG_FORMAT,
+	datefmt='%Y-%m-%d %H:%M:%S%z'
+):
 	"""
 	Gets logger in singleton pattern so as to avoid duplicating logs across 
 	multiple processes.
@@ -56,7 +60,11 @@ def get_logger(
 		logger.addHandler(logging.StreamHandler())
 
 	logger.setLevel(level)
-	formatter = LevelFormatter(format_by_level, default_log_format)
+	formatter = LevelFormatter(
+		format_by_level, 
+		default_log_format,
+		datefmt=datefmt
+	)
 	for handler in logger.handlers:
 		handler.setLevel(level)
 		handler.setFormatter(formatter)
