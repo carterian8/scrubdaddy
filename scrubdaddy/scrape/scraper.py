@@ -57,15 +57,6 @@ def run(args):
 
 		# Find specific script tag containing the info...
 
-		# product_info_regex = r"""
-		# 	.+dataLayer\.push\((\s+)?{(\s+)?item:(\s+)?{(\s+)
-		# 	itemID:(\s+)?(?P<item>\d+).+					# Item number
-		# 	fixedPrice:(\s+)?(?P<fixedPrice>[\d.]+).+		# Fixed price
-		# 	price:(\s+)?(?P<price>[\d.]+).+					# Price
-		# 	highestPrice:(\s+)?(?P<highestPrice>[\d.]+).+	# Highest price
-		# 	caliber:(\s+)?\"(?P<caliber>.+)\".+				# Caliber
-		# 	# manufacturer:(\s+)?\"(?P<manufacturer>.+)\".+	# Manufacturer
-		# """
 		product_info_regex = r"""
 			.+dataLayer\.push\((\s+)?(?P<json>{(\s+)?item:(\s+)?{(\s+).+}).+
 		"""
@@ -87,16 +78,19 @@ def run(args):
 
 		# Extract product information...
 
+		num_rounds_div = item_soup.find("div", id="divICValue_NumberOfRounds")
+
 		item_js_dict = demjson.decode(match.group("json"))
 		product_info = dict()
 		product_info["timestamp"] 		= datetime.now(timezone.utc).strftime("%Y-%m-%d_%H:%M:%S%z")
 		product_info["sold"] 			= (item_soup.find("div", class_="alert sold-item") is not None)
 		product_info["item_id"] 		= item_js_dict["item"]["itemID"]
+		product_info["category_id"]		= item_js_dict["item"]["categoryID"]
 		product_info["price_usd"] 		= item_js_dict["item"]["price"]
 		product_info["manufacturer"] 	= item_js_dict["item"]["manufacturer"]
 		product_info["model"] 			= None
 		product_info["caliber"] 		= item_js_dict["item"]["caliber"]
-		product_info["num_rounds"] 		= None
+		product_info["num_rounds"] 		= num_rounds_div["title"] if num_rounds_div else None
 		product_info["buying_format"] 	= None
 		product_info["listing_details"] = None
 		product_info["condition"] 		= None
