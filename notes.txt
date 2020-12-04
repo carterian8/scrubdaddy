@@ -1,3 +1,7 @@
+*** 2020-12-04 ***
+
+Remember to set up the geckodriver before running:
+
 *** 2020-11-21 ***
 
 AWS and Docker:
