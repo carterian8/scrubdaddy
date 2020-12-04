@@ -119,7 +119,8 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
         'selenium',
-        'beautifulsoup4'
+        'beautifulsoup4',
+        'demjson'
     ],  # Optional
 
     
