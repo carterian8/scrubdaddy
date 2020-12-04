@@ -91,11 +91,11 @@ def run(args):
 		product_info["model"] 			= None
 		product_info["caliber"] 		= item_js_dict["item"]["caliber"]
 		product_info["num_rounds"] 		= num_rounds_div["title"] if num_rounds_div else None
-		product_info["buying_format"] 	= None
-		product_info["listing_details"] = None
-		product_info["condition"] 		= None
-		product_info["min_bid"] 		= None
-		product_info["bid_count"]		= None
+		product_info["buying_format"] 	= None # Auction or not
+		product_info["listing_details"] = None # More elaborate
+		product_info["condition"] 		= None # Condition is only a number
+		product_info["min_bid"] 		= None # necessary?
+		product_info["bid_count"]		= None # necessary?
 
 		logr.debug(product_info)
 		break
